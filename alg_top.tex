@@ -1,0 +1,395 @@
+% algtop_merged.tex
+% A comprehensive introduction to algebraic topology, merging the
+% detailed proofs from algtop_intro.tex with the full chapters on
+% cohomology and further topics from algtop.tex. No information is lost.
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz-cd}
+\usepackage{hyperref}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{theorem}{Theorem}[section]
+
+\title{A Gentle Ascent into Algebraic Topology:\\From Holes to Homotopy}
+\author{Compiled from lecture notes}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{What Algebraic Topology is About}
+Algebraic topology tries to answer a simple question: \textbf{How can we tell whether two spaces are truly different?} 
+A rubber sheet can be stretched and bent without tearing, so to a topologist a coffee mug and a doughnut are “the same” – they both have one hole.
+We need \emph{invariants}: numbers, groups, or algebraic structures that stay unchanged under continuous deformations (homeomorphisms, or more generally homotopy equivalences).
+The three fundamental invariants we will study are:
+
+\begin{itemize}
+    \item \textbf{Homology groups} $H_n(X)$ – detect “holes” of different dimensions.
+    \item \textbf{Cohomology rings} $H^*(X)$ – a richer algebraic object that also remembers how holes interact.
+    \item \textbf{Homotopy groups} $\pi_n(X)$ – classify maps from spheres into the space, extremely subtle.
+\end{itemize}
+
+We begin with the most geometric of these: homology.
+
+\section{Homology: Counting Holes with Algebra}
+
+\subsection{Chains and Boundaries}
+To get hold of a topological space $X$, we approximate it by a simplicial complex – a union of points, edges, triangles, tetrahedra, etc.\ glued along faces.
+An \textbf{oriented $p$-simplex} is the convex hull of $p+1$ ordered vertices $[v_0,\dots,v_p]$.
+Orientation means that swapping two vertices changes the sign.
+
+The \textbf{boundary} of a simplex is the alternating sum of its faces:
+\[
+\partial_p [v_0,\dots,v_p] = \sum_{i=0}^p (-1)^i [v_0,\dots,\widehat{v_i},\dots,v_p],
+\]
+where $\widehat{v_i}$ means the vertex is omitted.
+We extend this operator linearly to formal sums of $p$-simplices, the \textbf{$p$-chains} $C_p(K)$.
+
+\begin{theorem}[The boundary of a boundary is zero]
+$\partial_{p-1} \circ \partial_p = 0$ for all $p$.
+\end{theorem}
+\textit{Proof idea.} Apply $\partial_{p-1}$ to the above sum: each face yields a sum of $(p-2)$-faces, and each such face appears twice with opposite signs because it can be obtained by omitting two vertices in either order.
+
+\subsection{Homology Groups}
+A $p$-chain $c$ with $\partial_p c = 0$ is called a \textbf{cycle} (it has no boundary).  
+A $p$-chain of the form $\partial_{p+1} d$ is called a \textbf{boundary}.  
+Because $\partial^2 = 0$, every boundary is a cycle. The $p$-th \textbf{homology group} is
+\[
+H_p(K) = \frac{\ker \partial_p}{\operatorname{im} \partial_{p+1}}.
+\]
+Intuitively, homology classes are cycles that are not themselves boundaries – that is, they detect “holes” that cannot be filled in.
+
+\begin{example}[The circle $S^1$]
+Approximated by a triangle, the chain $a+b+c$ in the picture is a cycle but not a boundary (there is no 2‑chain whose boundary is $a+b+c$). Hence $H_1(S^1) \cong \mathbb{Z}$.
+\end{example}
+
+\begin{example}[The torus $T = S^1 \times S^1$]
+One 2‑dimensional hole (the interior) and two independent 1‑dimensional loops:
+\[
+H_0(T) = \mathbb{Z},\quad H_1(T) = \mathbb{Z}\oplus\mathbb{Z},\quad H_2(T) = \mathbb{Z}.
+\]
+\end{example}
+
+\subsection{Relative Homology and the Long Exact Sequence}
+
+Often we want to study a space modulo a subspace. For a pair $(K,L)$, we define \textbf{relative chains} $C_p(K,L) = C_p(K)/C_p(L)$. The boundary map descends to a map $\bar{\partial}_p$ on the quotient, and we obtain \textbf{relative homology} $H_p(K,L)$. Intuitively, chains in $L$ are ignored.
+
+The relationships among $H_*(L)$, $H_*(K)$ and $H_*(K,L)$ are captured by a \textbf{long exact sequence}:
+\[
+\begin{tikzcd}
+\cdots \arrow[r] & H_p(L) \arrow[r, "i_*"] & H_p(K) \arrow[r, "j_*"] & H_p(K,L) \arrow[r, "\partial_*"] & H_{p-1}(L) \arrow[r] & \cdots
+\end{tikzcd}
+\]
+where $i:L\hookrightarrow K$ is inclusion, $j:K\hookrightarrow (K,L)$ is the natural map, and $\partial_*$ is a connecting homomorphism that “pushes a relative cycle onto its boundary in $L$”.
+
+\subsubsection*{Construction and Proof of Exactness}
+We want to understand why this sequence is exact, i.e. $\operatorname{Im} i_* = \ker j_*$, etc.
+The proof is a standard application of the \textbf{zig‑zag lemma} applied to the short exact sequence of chain complexes
+\[
+\begin{tikzcd}
+0 \arrow[r] & C_*(L) \arrow[r, "i"] & C_*(K) \arrow[r, "j"] & C_*(K,L) \arrow[r] & 0.
+\end{tikzcd}
+\]
+
+\begin{enumerate}
+    \item \textbf{Exactness of the chain sequence.}
+    For each degree $p$, the map $i$ is injective and $j$ is surjective by definition, and $\operatorname{Im} i_p = \ker j_p$ because $C_p(K,L) = C_p(K)/C_p(L)$. Hence we have a short exact sequence of chain complexes.
+    
+    \item \textbf{The induced long exact sequence.}
+    Applying homology to a short exact sequence of chain complexes always yields a long exact sequence of homology groups. The connecting homomorphism $\partial_* : H_p(K,L) \to H_{p-1}(L)$ is defined as follows:
+    \begin{itemize}
+        \item Take a relative cycle $\bar{c} \in C_p(K,L)$ (so $\bar{\partial} \bar{c}=0$). Lift $\bar{c}$ to an absolute chain $c \in C_p(K)$ via the surjection $j$. Then $\partial(c)$ maps to zero in $C_{p-1}(K,L)$ (because $\bar{\partial}\bar{c}=0$), so $\partial(c) \in \ker j_{p-1} = \operatorname{Im} i_{p-1}$. Hence there is a unique $b \in C_{p-1}(L)$ with $i_{p-1}(b)=\partial(c)$.
+        \item One checks that $b$ is a cycle and its class $[b] \in H_{p-1}(L)$ is independent of the choice of lift. So we set $\partial_*[\bar{c}] = [b]$.
+    \end{itemize}
+
+    \item \textbf{Exactness at $H_p(K)$.}
+    An absolute cycle $c$ satisfies $j_*[c]=0$ precisely when $j(c)$ is a relative boundary: $j(c) = \bar{\partial}(\bar{d})$. Lifting $\bar{d}$ to $d$, we get $j(c - \partial(d)) = 0$, so $c - \partial(d) \in \operatorname{Im} i$, which means $[c]$ comes from $H_p(L)$. Thus $\ker j_* \subseteq \operatorname{Im} i_*$. The opposite inclusion is trivial because $j\circ i =0$ on chains, so $j_*\circ i_* = 0$.
+    
+    \item \textbf{Exactness at $H_p(K,L)$ and $H_{p-1}(L)$.}
+    Similar diagram chasing yields $\operatorname{Im} j_* = \ker \partial_*$ and $\operatorname{Im} \partial_* = \ker i_*$. The reader is encouraged to work through these zig‑zags explicitly.
+\end{enumerate}
+
+\begin{remark}
+The exactness condition $\operatorname{Im} f = \ker g$ means that a homology class dies when it can be “filled” by a class from the previous group. This algebraic pattern repeats throughout topology.
+\end{remark}
+
+\subsection{Excision and the Mayer–Vietoris Sequence}
+Two further powerful tools for computing homology are \textbf{excision} and \textbf{Mayer–Vietoris}.
+
+\begin{theorem}[Excision]
+If $U \subseteq A \subseteq X$ with $\overline{U} \subseteq \operatorname{int}(A)$, then the inclusion $(X\setminus U,\, A\setminus U) \hookrightarrow (X,A)$ induces isomorphisms $H_p(X\setminus U, A\setminus U) \cong H_p(X,A)$ for all $p$.
+\end{theorem}
+Intuitively, cutting out a subset that does not touch the “relative boundary” does not change relative homology.
+
+\begin{theorem}[Mayer–Vietoris sequence]
+Let $X = U \cup V$ be a union of two open sets (or, for simplicial complexes, two subcomplexes). Then there is a long exact sequence
+\[
+\begin{tikzcd}
+\cdots \arrow[r] & H_p(U\cap V) \arrow[r, "\alpha"] & H_p(U)\oplus H_p(V) \arrow[r, "\beta"] & H_p(X) \arrow[r, "\Delta"] & H_{p-1}(U\cap V) \arrow[r] & \cdots
+\end{tikzcd}
+\]
+\end{theorem}
+
+\subsubsection*{Proof of Mayer–Vietoris (sketch)}
+Consider the chain complexes of the two subspaces and their intersection. For each $p$, we have a short exact sequence
+\[
+\begin{tikzcd}
+0 \arrow[r] & C_p(U\cap V) \arrow[r, "{x\mapsto (x,-x)}"] & C_p(U)\oplus C_p(V) \arrow[r, "{(a,b)\mapsto a+b}"] & C_p(U)+C_p(V) \arrow[r] & 0.
+\end{tikzcd}
+\]
+The sum $C_p(U)+C_p(V)$ is a subcomplex of $C_p(X)$, and by a barycentric subdivision argument it computes the same homology as $C_p(X)$ (it is chain homotopy equivalent). Therefore we obtain a short exact sequence of chain complexes whose homology is the Mayer–Vietoris sequence, together with a connecting homomorphism $\Delta$ defined exactly as in the previous zig‑zag lemma. The map $\alpha$ is induced by the two inclusions, $\beta$ is the difference of the two inclusion‑induced maps, and $\Delta$ is the connecting map.
+
+\subsection{Computing Homology of Spheres and Suspensions}
+With these sequences in hand we can compute the homology of spheres.
+
+\begin{theorem}
+The homology of the $n$-sphere is
+\[
+H_p(S^n) \cong \begin{cases}
+\mathbb{Z} & p = 0 \text{ or } p = n,\\
+\{0\} & \text{otherwise}.
+\end{cases}
+\]
+\end{theorem}
+
+\textit{Proof by induction using Mayer–Vietoris.}
+Decompose $S^n$ as the union of the upper hemisphere $U = S^n\setminus\{S\}$ and the lower hemisphere $V = S^n\setminus\{N\}$ (punctured at opposite poles). Each is homeomorphic to an open $n$-disk and thus contractible. Their intersection $U\cap V \simeq S^{n-1}$.
+Now apply Mayer–Vietoris:
+\[
+\cdots \to H_p(U\cap V) \to H_p(U)\oplus H_p(V) \to H_p(S^n) \to H_{p-1}(U\cap V) \to \cdots
+\]
+For $p\ge 2$, the middle term vanishes (contractible spaces), giving isomorphisms
+\[
+H_p(S^n) \cong H_{p-1}(S^{n-1}).
+\]
+For $p=1$, we must check the connecting map. One finds $H_1(S^n)=0$ for $n>1$ and $H_0(S^n)\cong \mathbb{Z}$. Induction starting from $S^0$ (two points) yields the result.
+
+\begin{example}[Suspension isomorphism]
+If we apply Mayer–Vietoris to $\Sigma K$, the union of two cones $C_+K$ and $C_-K$ over $K$ intersecting exactly in $K$, we obtain isomorphisms
+\[
+H_{p+1}(\Sigma K) \cong H_p(K) \quad \text{for } p>0.
+\]
+This explains why the homology of a suspension shifts up by one dimension.
+\end{example}
+
+\subsection{Euler Characteristic}
+If each chain group $C_p(K)$ has finite rank (say vector spaces over $\mathbb{R}$), the \textbf{Euler characteristic} is
+\[
+\chi(K) = \sum_{p=0}^{\dim K} (-1)^p \operatorname{rk} C_p(K).
+\]
+Thanks to the relation $\operatorname{rk} H_p = \operatorname{rk} Z_p - \operatorname{rk} B_p$ and a telescoping sum, one proves
+\[
+\chi(K) = \sum_{p=0}^{\dim K} (-1)^p \operatorname{rk} H_p(K),
+\]
+showing that $\chi$ is a topological invariant (even a homotopy invariant). For a sphere $S^n$, $\chi = 1+(-1)^n$; for a torus, $\chi = 0$.
+
+\subsection{The Algebra of Homology: Tensor Products and Direct Sums}
+Homology groups are abelian groups. The \textbf{direct sum} $G\oplus H$ simply pairs elements coordinate‑wise.  
+The \textbf{tensor product} $G \otimes H$ is built from symbols $g\otimes h$ with the relation
+\[
+(g_1+g_2)\otimes h = g_1\otimes h + g_2\otimes h,\qquad g\otimes (h_1+h_2) = g\otimes h_1 + g\otimes h_2.
+\]
+These operations appear naturally when computing the homology of product spaces. Useful algebraic facts include:
+\[
+(G_1\oplus G_2)\otimes H \cong (G_1\otimes H)\oplus (G_2\otimes H),\qquad \mathbb{Z}\otimes G \cong G.
+\]
+
+\begin{theorem}[Künneth formula (simplified)]
+If the coefficient group is a field, then
+\[
+H_p(X\times Y) \;\cong\; \bigoplus_{i+j=p} H_i(X) \otimes H_j(Y).
+\]
+For integer coefficients, a torsion correction term appears.
+\end{theorem}
+
+\section{Cohomology: The Dual Perspective}
+
+\subsection{From Chains to Functions}
+If homology is built from chains, cohomology is built from functions on chains.
+Let $C_p(K)$ be the $p$-chains. Define \textbf{cochains} $C^p(K) = \operatorname{Hom}(C_p(K), \mathbb{Z})$ (or with coefficients in a ring $R$).
+The \textbf{coboundary} operator $d_p : C^p(K) \to C^{p+1}(K)$ is the dual of $\partial_{p+1}$:
+\[
+(d_p \varphi)(c) = \varphi(\partial_{p+1} c).
+\]
+Because $d\circ d = 0$, we obtain \textbf{cohomology groups}
+\[
+H^p(K) = \frac{\ker d_p}{\operatorname{im} d_{p-1}}.
+\]
+
+\subsection{De Rham Cohomology: A Smooth View}
+For smooth manifolds, the most natural avatar of cohomology comes from differential forms.
+A \textbf{$p$-form} $\omega$ is an antisymmetric multilinear object that can be integrated over $p$-dimensional regions.
+The \textbf{exterior derivative} $d\omega$ raises the degree by one and satisfies $d\circ d = 0$.
+
+A form is \textbf{closed} if $d\omega = 0$, and \textbf{exact} if $\omega = d\eta$. The \textbf{de Rham cohomology} is
+\[
+H^p_{\text{dR}}(M) = \frac{\{\text{closed } p\text{-forms}\}}{\{\text{exact } p\text{-forms}\}}.
+\]
+Its key property is that it is isomorphic to singular cohomology with real coefficients, so it detects the same “holes”.
+
+\begin{example}[Poincaré Lemma]
+On a contractible manifold (like a star‑shaped domain in $\mathbb{R}^n$), every closed form is exact. Hence $H^p(M) \cong \{0\}$ for $p>0$.
+\end{example}
+
+\subsection{Wedge Product and the Cup Product}
+The \textbf{wedge product} of two differential forms $\omega \in \Omega^p$, $\eta \in \Omega^q$ is a $(p+q)$-form defined by
+\[
+(\omega \wedge \eta)(v_1,\dots,v_{p+q}) = \frac{1}{p!\, q!}\sum_{\sigma} \operatorname{sgn}(\sigma)\, \omega(v_{\sigma(1)},\dots) \, \eta(v_{\sigma(p+1)},\dots).
+\]
+It satisfies $d(\omega\wedge\eta) = d\omega\wedge\eta + (-1)^p \omega\wedge d\eta$, so it descends to cohomology.
+On the cohomological level this gives the \textbf{cup product}
+\[
+\cup : H^p(M) \times H^q(M) \longrightarrow H^{p+q}(M),\qquad [\omega]\cup[\eta] = [\omega\wedge\eta].
+\]
+This makes $H^*(M) = \bigoplus_{p\ge 0} H^p(M)$ into a graded ring. The ring structure is a powerful invariant: for example, it easily distinguishes $\mathbb{CP}^2$ from $S^2\vee S^4$ even though their homology groups are the same.
+
+\subsection{Stokes' Theorem and Duality}
+The crowning jewel of de Rham theory is \textbf{Stokes' theorem}:
+\[
+\int_\Omega d\omega = \int_{\partial\Omega} \omega.
+\]
+It encapsulates the fundamental theorem of calculus and all higher‑dimensional analogues. In the language of chains, it says that the evaluation pairing
+\[
+\langle [\omega], [c]\rangle = \int_c \omega
+\]
+between cohomology classes and homology classes is well‑defined and non‑degenerate over $\mathbb{R}$. This realizes $H^p(M;\mathbb{R})$ as the dual vector space of $H_p(M;\mathbb{R})$.
+
+\begin{remark}[Cohomology vs.\ Homology]
+Cohomology has advantages:
+\begin{itemize}
+    \item A ring structure (cup product) that captures subtle intersection information.
+    \item Natural transformation laws under smooth maps (pullback).
+    \item Links to global analysis, e.g.\ the interpretation of closed forms as solutions to differential equations.
+\end{itemize}
+\end{remark}
+
+\section{Homotopy Groups: Loops and Higher Spheres}
+Homotopy groups detect higher-dimensional winding, not just holes. The exact sequences here are just as fundamental.
+
+\subsection{The Fundamental Group}
+\begin{definition}
+For a pointed space $(X,x_0)$, $\pi_1(X,x_0)$ is the set of homotopy classes of loops based at $x_0$. The group multiplication is concatenation of loops.
+\end{definition}
+
+\begin{example}
+\begin{itemize}
+    \item $\pi_1(S^1) \cong \mathbb{Z}$: a loop that goes around the circle $n$ times gives the integer $n$.
+    \item $\pi_1(S^n) \cong \{0\}$ for $n\ge 2$: any loop on the sphere can be shrunk to a point.
+    \item $\pi_1(\mathbb{RP}^2) \cong \mathbb{Z}/2\mathbb{Z}$: the generator is a loop that cannot be shrunk, but going around twice is homotopically trivial.
+    \item $\pi_1(T^2) \cong \mathbb{Z}\oplus\mathbb{Z}$: the two independent loops around the two holes.
+\end{itemize}
+\end{example}
+
+\subsection{Higher Homotopy Groups and the Exact Sequence of a Pair}
+For $n\ge 2$, $\pi_n(X,x_0)$ is defined using maps $f:(I^n,\partial I^n)\to (X,x_0)$. Equivalently, maps $S^n\to X$ preserving base points. The group operation is defined coordinatewise (and is abelian for $n\ge2$). There is a relative version $\pi_n(X,A,x_0)$ (or $\pi_n(X,A)$ for short) using maps from the $n$-cube that send one face to $A$ and the remainder of the boundary to $x_0$. These fit into the \textbf{long exact sequence of a pair}:
+\[
+\begin{tikzcd}
+\cdots \arrow[r] & \pi_n(A) \arrow[r, "i_*"] & \pi_n(X) \arrow[r, "j_*"] & \pi_n(X,A) \arrow[r, "\partial"] & \pi_{n-1}(A) \arrow[r] & \cdots
+\end{tikzcd}
+\]
+
+\subsubsection*{Construction and Exactness}
+The maps are:
+\begin{itemize}
+    \item $i_*$ induced by inclusion $A\hookrightarrow X$,
+    \item $j_*$ by regarding a map $(I^n,\partial I^n)\to (X,x_0)$ as a map $(I^n, I^{n-1}, J^{n-1})\to (X,A,x_0)$ where the face condition is satisfied,
+    \item $\partial$ restricts a relative map to its face $I^{n-1}\times\{0\}$ that lands in $A$.
+\end{itemize}
+
+\textbf{Exactness at $\pi_n(X)$.} If $[f]\in\ker j_*$, then $f$ represents a relative homotopy class that is trivial, so there is a homotopy $H$ of maps $(I^n,\partial I^n)\to (X,x_0)$ relative to the face $I^{n-1}\times\{0\}$ (which sits in $A$). Actually, $j_*[f]=0$ means that $f$, viewed as a relative map, is homotopic relative to the distinguished face to the constant map at $x_0$. This homotopy provides a deformation of $f$ to a map whose image lies entirely in $A$, hence $[f]$ comes from $\pi_n(A)$. The detailed argument uses the fact that maps $I^n\to X$ are homotopic rel $\partial I^n$ to maps into $A$ if they can be deformed to lie in $A$ while fixing the boundary. Hence $\operatorname{Im} i_* = \ker j_*$.
+
+\textbf{Exactness at $\pi_n(X,A)$.} The condition $\partial[\alpha]=0$ means that the restriction of $\alpha$ to the face $I^{n-1}$ is homotopic to the constant map inside $A$. One can extend this homotopy to a homotopy of the whole cube, obtaining a representative that is constant on that face, i.e.\ coming from an element of $\pi_n(X)$. Thus $\operatorname{Im} j_* = \ker \partial$.
+
+\textbf{Exactness at $\pi_{n-1}(A)$.} Exercise.
+
+\begin{remark}
+The homotopy exact sequence of a pair does not require a simplicial structure; it works for any pair of spaces (with some niceness assumptions). It is fundamental for relating homotopy groups of a space and a subspace.
+\end{remark}
+
+\subsection{Fibrations and the Homotopy Exact Sequence}
+A \textbf{fibration} $p: E \to B$ is a map satisfying the homotopy lifting property: any homotopy $H: X\times I \to B$ can be lifted to $\widetilde{H}: X\times I \to E$ if an initial lift is given. Every fibre bundle (locally trivial) is a fibration. For a fibration with fibre $F = p^{-1}(b_0)$, we have the \textbf{homotopy exact sequence}:
+\[
+\begin{tikzcd}
+\cdots \arrow[r] & \pi_n(F) \arrow[r] & \pi_n(E) \arrow[r] & \pi_n(B) \arrow[r, "\partial"] & \pi_{n-1}(F) \arrow[r] & \cdots
+\end{tikzcd}
+\]
+ending at $\pi_0(F)$, $\pi_0(E)$, $\pi_0(B)$ as sets.
+
+\subsubsection*{Proof of Exactness (Sketch)}
+The key ingredient is the homotopy lifting property. 
+\begin{itemize}
+    \item The map $\pi_n(F)\to \pi_n(E)$ is induced by inclusion.
+    \item The map $\pi_n(E)\to \pi_n(B)$ is $p_*$. Its kernel consists of classes represented by maps $f: S^n\to E$ such that $p\circ f$ is nullhomotopic. Lifting the nullhomotopy gives a homotopy of $f$ into the fibre over $b_0$, so $[f]$ comes from $\pi_n(F)$. Thus $\operatorname{Im} i_* = \ker p_*$.
+    \item The connecting map $\partial$: given $[g]\in\pi_n(B)$, represent it by $g: (I^n,\partial I^n)\to (B,b_0)$. The constant map at $e_0$ lifts to a map $\widetilde{g}$ defined on $I^{n-1}\times\{0\}$, and we extend it to a lift $\widetilde{G}$ of $g$ on the whole cube using the homotopy lifting property. The restriction of $\widetilde{G}$ to the remaining face $I^{n-1}\times\{1\}$ lands in the fibre $F$, giving an element of $\pi_{n-1}(F)$. This is independent of choices and defines $\partial[g]$.
+    \item Exactness elsewhere follows from similar lifting arguments.
+\end{itemize}
+
+\begin{example}[Covering spaces]
+The universal cover $\mathbb{R} \to S^1$, $t\mapsto e^{2\pi i t}$, is a fibration with fibre $\mathbb{Z}$ (discrete). Using the exact sequence and $\pi_n(\mathbb{R})=0$ for all $n$, we deduce $\pi_n(S^1)=0$ for $n\ge2$ and $\pi_1(S^1)=\mathbb{Z}$.
+\end{example}
+
+\subsection{The Hopf Fibration}
+A remarkable map discovered by Hopf is the fibration
+\[
+S^1 \hookrightarrow S^3 \xrightarrow{\eta} S^2.
+\]
+Here $S^3 = \{(z_0,z_1)\in\mathbb{C}^2 \mid |z_0|^2+|z_1|^2=1\}$ and $\eta(z_0,z_1) = [z_0:z_1] \in \mathbb{CP}^1 \cong S^2$. The long exact sequence of this fibration gives
+\[
+\begin{tikzcd}
+\cdots \arrow[r] & \pi_k(S^1) \arrow[r] & \pi_k(S^3) \arrow[r] & \pi_k(S^2) \arrow[r, "\partial"] & \pi_{k-1}(S^1) \arrow[r] & \cdots
+\end{tikzcd}
+\]
+Since $\pi_k(S^1)=0$ for $k\ge2$, we obtain isomorphisms $\pi_k(S^3)\cong \pi_k(S^2)$ for $k\ge3$. In particular, for $k=3$, using $\pi_3(S^3)=\mathbb{Z}$ (by the Hurewicz theorem) we obtain
+\[
+\pi_3(S^2) \cong \mathbb{Z}.
+\]
+Thus there are non‑trivial maps $S^3 \to S^2$ that cannot be deformed to a constant map, the first example of a higher homotopy group being infinite even though no homology group would predict it.
+
+\subsection{Projective Spaces and Orthogonal Groups}
+Further identifications connect geometry and algebra:
+\[
+SO(3) \cong \mathbb{RP}^3 \cong S^3 / \{\pm 1\},\qquad
+\mathbb{CP}^n \cong SU(n+1)/U(n).
+\]
+The Hopf map is then the quotient $S^3 \to S^3/S^1 \cong S^2$, where we view $S^3$ as the unit quaternions and $S^1$ as the complex numbers of unit norm inside them.
+
+\subsection{The Hurewicz Theorem}
+A deep relation between homotopy and homology is given by the \textbf{Hurewicz theorem}:
+if $X$ is $(n-1)$-connected ($\pi_i(X)=0$ for $i<n$) with $n\ge 2$, then
+\[
+\pi_n(X) \cong H_n(X)
+\]
+is an isomorphism. For $n=1$, abelianization gives $H_1(X) \cong \pi_1(X)^{\text{ab}}$.
+This theorem explains, for instance, why the first non‑vanishing homotopy and homology groups of a sphere coincide: $\pi_n(S^n) \cong H_n(S^n) \cong \mathbb{Z}$.
+
+\section{Concluding Remarks}
+We have covered the three pillars of basic algebraic topology:
+\begin{itemize}
+    \item \textbf{Homology}: cycles mod boundaries, counts holes; easy to compute with exact sequences.
+    \item \textbf{Cohomology}: dual theory, has a ring structure; connected to differential forms and integration via de Rham cohomology.
+    \item \textbf{Homotopy}: maps from spheres, much richer but harder to compute; related to homology by the Hurewicz theorem.
+\end{itemize}
+
+Along the way we encountered four families of exact sequences that are the workhorses of algebraic topology:
+\begin{itemize}
+    \item \textbf{Homology of a pair} and \textbf{Mayer–Vietoris} – for computing homology.
+    \item \textbf{Homotopy of a pair} and \textbf{of a fibration} – for computing homotopy groups.
+\end{itemize}
+Their proofs, though elementary (diagram chasing or lifting arguments), demonstrate the power of categorical thinking. With them, one can compute invariants of a vast array of spaces.
+
+The journey does not end here. Further topics include:
+\begin{itemize}
+    \item Higher homotopy theory (e.g.\ $\pi_4(S^3) \cong \mathbb{Z}/2\mathbb{Z}$).
+    \item Spectral sequences for computing homology and homotopy.
+    \item Sheaf cohomology and $K$-theory.
+    \item Topological quantum field theories and the categorification of these invariants.
+\end{itemize}
+
+As with the study of adjunctions and Yoneda, the key is to see that \emph{every abstract invariant encodes a concrete geometric intuition}. The “holes” detected by homology, the “intersection numbers” recorded by the cup product, and the “winding” measured by homotopy are all facets of the same fundamental quest: to understand shape through algebra.
+
+\end{document}
