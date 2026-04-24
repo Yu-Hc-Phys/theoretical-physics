@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.7.5)  23 APR 2026 23:27
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.7.5)  24 APR 2026 13:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -526,6 +526,11 @@ Overfull \hbox (17.04pt too wide) in paragraph at lines 259--261
 
 
 [7]
+Overfull \hbox (10.55768pt too wide) in paragraph at lines 294--298
+\TU/lmr/m/n/10 spect to $\OML/cmm/m/it/10 f$\TU/lmr/m/n/10 , the descending manifolds of the gradient flow $\OMS/cmsy/m/n/10 ^^@r\OML/cmm/m/it/10 f$ \TU/lmr/m/n/10 form a CW‑structure
+ []
+
+
 
 [8]
 
@@ -533,21 +538,23 @@ Overfull \hbox (17.04pt too wide) in paragraph at lines 259--261
 
 [10]
 
-[11] (./alg_top.aux)
+[11]
+
+[12] (./alg_top.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-06-09>
  ***********
 Package rerunfilecheck Info: File `alg_top.out' has not changed.
-(rerunfilecheck)             Checksum: 483E1A27725597F17F47AB38772CAC63;5022.
+(rerunfilecheck)             Checksum: 50A02C536C20D4AD2FAC66ACCB3C6A74;5409.
  ) 
 Here is how much of TeX's memory you used:
  21184 strings out of 468529
  406278 string characters out of 5451400
- 791736 words of memory out of 5000000
+ 792134 words of memory out of 5000000
  49211 multiletter control sequences out of 15000+600000
  633609 words of font info for 77 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  116i,14n,121p,762b,1091s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on alg_top.pdf (11 pages).
+Output written on alg_top.pdf (12 pages).
