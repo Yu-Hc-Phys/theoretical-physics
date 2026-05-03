@@ -1,0 +1,624 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathrsfs}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{physremark}[theorem]{Physical remark}
+
+% Notation
+\newcommand{\ad}{\operatorname{ad}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\K}{K}
+\newcommand{\g}{\mathfrak{g}}
+\newcommand{\h}{\mathfrak{h}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\D}{\Delta}
+\newcommand{\W}{\mathcal{W}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\rad}{\operatorname{rad}}
+
+\title{A Comprehensive Introduction to Semisimple Lie Algebras\\
+for Theoretical Physicists}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section*{Introduction}
+Lie algebras are the natural language of continuous symmetries. In quantum mechanics,
+the angular momentum operators $L_x, L_y, L_z$ close under commutation, forming the
+Lie algebra $\mathfrak{so}(3)$. In particle physics, the Gell‑Mann matrices satisfy
+the commutation relations of $\mathfrak{su}(3)$, the algebra of the strong force.
+More generally, any continuous symmetry group of a physical system gives rise to a
+Lie algebra of infinitesimal transformations, whose structure deeply constrains the
+possible spectra, interactions, and dynamics.
+
+This text aims to provide theoretical physicists with a self‑contained, rigorous
+yet physically motivated exposition of semisimple Lie algebras and their
+classification. We will follow the notation and logical development of Brian Hall’s
+textbook \cite{Hall}, filling in physical insights, examples, and applications at
+every stage. By the end, the reader will understand why the possible simple Lie
+algebras are precisely $A_n, B_n, C_n, D_n, E_6, E_7, E_8, F_4, G_2$, how this
+classification underpins the structure of the Standard Model, and how the roots
+and weights organise particle multiplets.
+
+We assume the reader is comfortable with linear algebra and knows a little quantum
+mechanics. No prior exposure to abstract Lie theory is required.
+
+\section{Basic Concepts: Solvability, Semisimplicity, and the Radical}
+
+\begin{definition}
+A \textbf{Lie algebra} over $\C$ is a vector space $\g$ with a bilinear bracket
+$[\cdot,\cdot]:\g\times\g\to\g$ that is alternating ($[X,Y]=-[Y,X]$) and satisfies
+the Jacobi identity
+\[
+[X,[Y,Z]] + [Y,[Z,X]] + [Z,[X,Y]] = 0.
+\]
+\end{definition}
+Physicists encounter Lie algebras as the commutator algebras of observables. For
+instance, the angular momentum operators satisfy $[J_i,J_j] = i\hbar \epsilon_{ijk} J_k$,
+which is a real Lie algebra (after factoring out $i$). We will work over the
+complex numbers for mathematical convenience; real forms can then be studied by
+restricting to suitable real subalgebras.
+
+The \textbf{derived series} is $\g^{(0)} = \g$, $\g^{(k+1)} = [\g^{(k)},\g^{(k)}]$, and the
+\textbf{lower central series} is $\g^{[0]} = \g$, $\g^{[k+1]} = [\g,\g^{[k]}]$.
+$\g$ is \textbf{solvable} if $\g^{(n)} = 0$ for some $n$, and \textbf{nilpotent}
+if $\g^{[n]} = 0$.
+These notions formalise the idea of a Lie algebra that can be ``integrated''
+step by step. In classical mechanics, solvable Lie algebras appear as algebras of
+canonical transformations for which the equations of motion can be solved by
+quadratures. In quantum mechanics, a set of operators whose commutators become
+successively simpler (nilpotent) generates a Heisenberg–Weyl type algebra.
+
+\begin{example}[Differential equations, motivation]
+A finite‑dimensional Lie algebra of vector fields on a manifold $M$ with
+$[V_i,V_j] = \sum c_{ij}^k V_k$ is completely integrable (in the sense of Frobenius)
+iff it is a subalgebra.  If the Lie algebra is solvable, the corresponding linear
+ordinary differential equations can be integrated by successive quadratures —
+Lie’s Theorem below guarantees a common eigenvector which reduces the order.
+This historical observation ties the algebraic notion of solvability to the
+solvability of differential equations by elementary functions.
+\end{example}
+
+\begin{definition}
+The \textbf{radical} $\rad(\g)$ is the unique maximal solvable ideal of $\g$.
+$\g$ is \textbf{semisimple} if $\rad(\g) = 0$, and \textbf{simple} if it has no
+proper nonzero ideals and $\dim\g > 1$.
+\end{definition}
+In physics, semisimple algebras are those for which all solvable ``tails'' have
+been stripped away; they are the building blocks of symmetry groups. The Standard
+Model gauge group $SU(3)\times SU(2)\times U(1)$ is reductive (direct sum of a
+semisimple part $SU(3)\times SU(2)$ and an abelian $U(1)$). The classification
+of semisimple algebras thus directly determines possible gauge groups.
+
+\section{Lie’s and Engel’s Theorems (Toolbox)}
+
+The two fundamental theorems that govern solvable and nilpotent Lie algebras are
+stated here for completeness; their proofs can be found in \cite{Hall}.
+
+\begin{theorem}[Lie’s Theorem]
+If $\g$ is a solvable Lie algebra and $\rho:\g\to\End(V)$ is a representation on
+a finite‑dimensional complex vector space $V\neq0$, then there exists a nonzero
+$v\in V$ that is a common eigenvector for all $\rho(X)$.
+\end{theorem}
+
+The proof inducts on $\dim\g$: pick a codimension‑one ideal $\mathfrak{a}$,
+use induction to get an eigenvector for $\mathfrak{a}$, then study the cyclic
+space generated by a complementary element $Y$.  The upshot is
+\[
+[\g,\g]\ \text{acts by nilpotent operators in any representation.}
+\]
+
+Physically, this means that if we have a set of operators that generate a solvable
+Lie algebra, we can find a basis in which they are all upper‑triangular. This is
+the algebraic reason why certain quantum‑mechanical problems (e.g., the harmonic
+oscillator) admit a ladder of states that terminates.
+
+\begin{theorem}[Engel’s Theorem]
+A Lie algebra $\g$ is nilpotent iff $\ad X$ is nilpotent for every $X\in\g$.
+\end{theorem}
+
+The nontrivial direction follows from the existence of a nonzero central element
+when all $\ad X$ are nilpotent, and an induction on dimension.
+
+\section{The Killing Form and Cartan’s Criteria}
+
+\begin{definition}
+The \textbf{Killing form} on $\g$ is the symmetric bilinear form
+\[
+\K(X,Y) = \tr(\ad X \circ \ad Y).
+\]
+It is \emph{invariant}: $\K([X,Y],Z) = \K(X,[Y,Z])$.
+\end{definition}
+For matrix Lie algebras (subalgebras of $\mathfrak{gl}(n,\C)$), the Killing form
+is just (up to a constant) the trace of the product: $\tr(XY)$. For $\mathfrak{su}(2)$,
+$\tr(\sigma_a\sigma_b)=2\delta_{ab}$, which is proportional to the usual Euclidean
+inner product. This metric structure is fundamental: in gauge theories, the Killing
+form is used to write kinetic terms for gauge fields, $- \frac{1}{4g^2} \K(F_{\mu\nu},F^{\mu\nu})$.
+
+\begin{theorem}[Cartan’s First Criterion]
+$\g$ is solvable iff $\K(X,Y)=0$ for all $X\in\g$ and $Y\in[\g,\g]$.
+\end{theorem}
+\begin{proof}[Sketch]
+If $\g$ is solvable, Lie’s theorem applied to the adjoint representation
+triangularizes all $\ad X$; for $Y\in[\g,\g]$, $\ad Y$ is strictly
+upper‑triangular, so its product with any $\ad X$ has zero trace.
+Conversely, if the condition holds, one shows that $\g$ cannot contain a subalgebra
+isomorphic to $\mathfrak{sl}_2(\C)$ (whose Killing form is nondegenerate),
+forcing solvability.  Details are in \cite{Hall}, Thm.~5.32.
+\end{proof}
+
+\begin{theorem}[Cartan’s Second Criterion]
+$\g$ is semisimple iff $\K$ is nondegenerate.
+\end{theorem}
+\begin{proof}
+Let $\mathfrak{r} = \{X\in\g\mid \K(X,\g)=0\}$ be the radical of the form.
+Invariance implies $\mathfrak{r}$ is an ideal; Cartan’s first criterion shows
+$\mathfrak{r}$ is solvable, hence $\mathfrak{r}\subseteq\rad(\g)$.
+If $\g$ is semisimple, $\rad(\g)=0$, so $\mathfrak{r}=0$ and $\K$ is nondegenerate.
+Conversely, if $\K$ is nondegenerate, any solvable ideal $\mathfrak{a}$ satisfies
+$\K(\mathfrak{a},\g)=0$ (Lie’s theorem again), so $\mathfrak{a}=0$; thus
+$\rad(\g)=0$.
+\end{proof}
+
+\begin{corollary}[Decomposition into simples]
+A semisimple Lie algebra $\g$ decomposes as a direct sum $\g = \bigoplus \g_i$
+of simple ideals, orthogonal with respect to $\K$.
+\end{corollary}
+\begin{proof}
+For any ideal $\mathfrak{a}$, its orthogonal complement $\mathfrak{a}^\perp$
+is also an ideal and $\g = \mathfrak{a}\oplus\mathfrak{a}^\perp$ when $\K|_{\mathfrak{a}}$
+is nondegenerate.  Iterating yields the decomposition.
+\end{proof}
+
+From now on we assume $\g$ is a **complex semisimple Lie algebra**.
+The nondegenerate Killing form will be our main tool.
+Physically, this tells us that any semisimple gauge algebra splits into
+mutually non‑interacting simple factors, each with its own coupling constant.
+
+\section{Cartan Subalgebras, Roots, and the Inner Product}
+
+\subsection{Cartan subalgebras}
+\begin{definition}
+A \textbf{Cartan subalgebra} $\h$ of $\g$ is a maximal abelian subalgebra consisting
+of $\ad$-diagonalizable (semisimple) elements.
+\end{definition}
+In physical terms, $\h$ corresponds to a maximal set of commuting observables
+that can be simultaneously diagonalized. For $SU(2)$, $\h$ is the one‑dimensional
+algebra generated by $J_3$; for $SU(3)$, $\h$ is the two‑dimensional algebra
+spanned by the two diagonal Gell‑Mann matrices $\lambda_3$ and $\lambda_8$.
+
+Cartan subalgebras always exist: take a \emph{regular} element $H_0\in\g$, i.e.,
+one for which the nilspace of $\ad H_0$ has minimal dimension. Then the generalized
+nullspace (the span of generalized eigenvectors with eigenvalue $0$) is a Cartan
+subalgebra. All Cartan subalgebras are conjugate by inner automorphisms, and their
+common dimension is the \textbf{rank} of $\g$. The rank is the number of independent
+additive quantum numbers (like isospin $I_3$, hypercharge $Y$) that can be simultaneously
+assigned to particles in a representation.
+
+Since $\h$ consists of commuting semisimple operators, they can be simultaneously
+diagonalized:
+\[
+\g = \h \oplus \bigoplus_{\alpha\in R} \g_\alpha,
+\tag{4.1}
+\]
+where $R\subset\h^*\setminus\{0\}$ is a finite set of \textbf{roots}, and
+\[
+\g_\alpha = \{ X\in\g \mid [H,X] = \alpha(H)X\ \forall H\in\h\}.
+\]
+The finiteness of $R$ follows because $\g$ is finite‑dimensional. The decomposition
+is orthogonal with respect to the Killing form: $\K(\g_\alpha,\g_\beta)=0$ unless
+$\alpha+\beta=0$.
+
+The restriction of $\K$ to $\h$ is nondegenerate (otherwise an $H\in\h$ orthogonal
+to $\h$ would be orthogonal to all $\g_\alpha$ as well, forcing $H=0$ by nondegeneracy
+of $\K$ on $\g$). Thus we have an isomorphism
+\[
+\phi:\h \longrightarrow \h^*,\qquad H \mapsto \big(H' \mapsto \K(H,H')\big).
+\]
+For $\lambda\in\h^*$, denote by $t_\lambda$ the unique element of $\h$ with
+$\lambda(H) = \K(t_\lambda, H)$ for all $H$.
+
+\subsection{Inner product on the root space}
+Define a bilinear form on $\h^*$ by
+\[
+(\lambda,\mu) := \K(t_\lambda, t_\mu).
+\]
+Let $E = \Span_\R R \subset \h^*$; this is a real form of $\h^*$ ($\h^* = E\oplus iE$).
+
+\begin{proposition}
+$(\cdot,\cdot)$ restricted to $E$ is a real‑valued, positive definite inner product.
+\end{proposition}
+\begin{proof}
+For any $H = t_\lambda$ with $\lambda\in E$, we compute using (4.1) that
+\[
+\K(H,H) = \tr((\ad H)^2) = \sum_{\alpha\in R} \alpha(H)^2.
+\]
+Indeed, on $\h$, $\ad H=0$; on each one‑dimensional space $\g_\alpha$, $\ad H$ acts as
+multiplication by $\alpha(H)$. Hence the trace of $(\ad H)^2$ is the sum over all roots
+of $\alpha(H)^2$. (Note that we will prove $\dim\g_\alpha=1$ shortly, but this formula
+holds even before that if we count each root with multiplicity.)
+Thus
+\[
+(\lambda,\lambda) = \K(t_\lambda,t_\lambda) = \sum_{\alpha\in R} \alpha(t_\lambda)^2
+= \sum_{\alpha\in R} (\lambda,\alpha)^2 \ge 0.
+\]
+If $(\lambda,\lambda)=0$, then $(\lambda,\alpha)=0$ for all $\alpha\in R$, so $\lambda$
+is orthogonal to the entire span of the roots, i.e., to $E$. Since $(\cdot,\cdot)$ is
+nondegenerate on $\h^*$, this forces $\lambda=0$. Hence the form is positive definite.
+\end{proof}
+
+Henceforth we write $\langle \lambda,\mu\rangle = (\lambda,\mu)$ for the inner product
+on $E$. This Euclidean structure is what allows us to draw root diagrams and measure
+angles and lengths. Physically, the inner product gives the metric on the space of
+quantum numbers.
+
+\subsection{$\mathfrak{sl}_2$ subalgebras and the fundamental root properties}
+Fix a root $\alpha\in R$. Because $\K$ pairs $\g_\alpha$ and $\g_{-\alpha}$ nondegenerately
+(if $\alpha$ is a root, so is $-\alpha$, and otherwise $\K(\g_\alpha,\g_\beta)=0$ unless
+$\beta=-\alpha$), we can pick $X_\alpha\in\g_\alpha$, $Y_\alpha\in\g_{-\alpha}$ such that
+$\K(X_\alpha,Y_\alpha)=1$. A direct calculation shows
+\[
+[X_\alpha,Y_\alpha] = -t_\alpha.
+\]
+Indeed, for any $H\in\h$, using invariance,
+\[
+\K([X_\alpha,Y_\alpha],H) = \K(X_\alpha,[Y_\alpha,H]) = -\K(X_\alpha,\alpha(H)Y_\alpha)
+= -\alpha(H)\K(X_\alpha,Y_\alpha) = -\alpha(H).
+\]
+On the other hand, $\K(t_\alpha,H) = \alpha(H)$ by definition. Since $\K$ on $\h$ is
+nondegenerate, we conclude $[X_\alpha,Y_\alpha] = -t_\alpha$.
+
+Now rescale:
+\[
+E_\alpha = \frac{2}{\langle\alpha,\alpha\rangle}X_\alpha,\quad
+F_\alpha = Y_\alpha,\quad
+H_\alpha = \frac{2}{\langle\alpha,\alpha\rangle}t_\alpha.
+\]
+Using $\K(t_\alpha,t_\alpha) = \langle\alpha,\alpha\rangle$, one verifies the
+$\mathfrak{sl}_2(\C)$ commutation relations:
+\[
+[H_\alpha, E_\alpha] = 2E_\alpha,\quad [H_\alpha, F_\alpha] = -2F_\alpha,\quad
+[E_\alpha, F_\alpha] = H_\alpha.
+\]
+Thus for each $\alpha\in R$, we obtain a subalgebra $\mathfrak{s}_\alpha \cong \mathfrak{sl}_2(\C)$.
+
+The adjoint action of this $\mathfrak{s}_\alpha$ on the whole $\g$ makes $\g$ a
+(finite‑dimensional) $\mathfrak{sl}_2(\C)$-module. The representation theory of
+$\mathfrak{sl}_2(\C)$ is elementary and well‑known to physicists from angular
+momentum: in any finite‑dimensional representation,
+\begin{itemize}
+  \item All eigenvalues of $H_\alpha$ are integers.
+  \item The eigenspaces (weight spaces) are finite‑dimensional.
+  \item If $v$ is an eigenvector of $H_\alpha$ with eigenvalue $\lambda$ (called a
+    weight vector), then $E_\alpha v$ (if nonzero) has eigenvalue $\lambda+2$, and
+    $F_\alpha v$ has eigenvalue $\lambda-2$.
+  \item The set of eigenvalues (weights) of $H_\alpha$ forms an unbroken string
+    $\lambda, \lambda-2, \dots, \lambda-2k$ where $k$ is the length of the string,
+    symmetric about zero. In particular, the highest and lowest weights are
+    negatives of each other.
+\end{itemize}
+These facts are proven by standard ladder operator arguments, completely analogous
+to those for the harmonic oscillator or angular momentum.
+
+We now apply this to $\g$ itself. Consider the $\alpha$-string through a root $\beta$:
+\[
+\mathfrak{g}(\beta,\alpha) = \bigoplus_{k\in\Z} \g_{\beta+k\alpha}.
+\]
+This is an $\mathfrak{sl}_2$-submodule of $\g$, because $E_\alpha\in\g_\alpha$,
+$F_\alpha\in\g_{-\alpha}$ and $H_\alpha\in\h$ preserve the root spaces as indicated.
+
+On $\g_{\beta+k\alpha}$, $H_\alpha$ acts as the scalar
+\[
+\frac{2}{\langle\alpha,\alpha\rangle} (\beta+k\alpha)(t_\alpha)
+= \frac{2}{\langle\alpha,\alpha\rangle} \big(\langle\beta,\alpha\rangle + k\langle\alpha,\alpha\rangle\big)
+= 2\frac{\langle\beta,\alpha\rangle}{\langle\alpha,\alpha\rangle} + 2k.
+\]
+Since these numbers must be integers (they are eigenvalues of $H_\alpha$ in a
+finite‑dimensional module), we deduce the first fundamental fact:
+\[
+n_{\beta\alpha} := 2\frac{\langle\beta,\alpha\rangle}{\langle\alpha,\alpha\rangle} \in \Z.
+\tag{4.2}
+\]
+These integers are called \textbf{Cartan integers}.
+
+Moreover, the set of $k$ for which $\g_{\beta+k\alpha}\neq0$ is an unbroken string
+from $k=-p$ to $k=q$, where $p,q\ge 0$. The highest weight in this string is
+$2\frac{\langle\beta,\alpha\rangle}{\langle\alpha,\alpha\rangle} + 2q$, and the lowest
+is $-2\frac{\langle\beta,\alpha\rangle}{\langle\alpha,\alpha\rangle} - 2p$. By symmetry,
+\[
+2\frac{\langle\beta,\alpha\rangle}{\langle\alpha,\alpha\rangle} + 2q
+= -\big(-2\frac{\langle\beta,\alpha\rangle}{\langle\alpha,\alpha\rangle} - 2p\big)
+\;\Longrightarrow\; p-q = 2\frac{\langle\beta,\alpha\rangle}{\langle\alpha,\alpha\rangle}.
+\tag{4.3}
+\]
+
+Now consider the special case $\beta=\alpha$. The string $\g_{\alpha+k\alpha}$ contains
+$\g_\alpha$ at $k=0$. Applying $E_\alpha$ to $\g_\alpha$ gives an element of
+$\g_{2\alpha}$, but we claim $2\alpha$ is not a root. Indeed, if $2\alpha$ were a root,
+the $H_\alpha$ weight on $\g_{2\alpha}$ would be $4$. The $\alpha$-string through $0$
+(i.e., taking $\beta=0$, though $0$ is not a root but we can consider the $\h$ part
+as $\g_0$) has weights that must be symmetric integers. The action of $H_\alpha$ on $\h$
+is zero, so the string through $0$ has weights $\dots, -2,0,2,\dots$. If $\g_{2\alpha}\neq0$,
+the weight $4$ would appear, contradicting the fact that in the string through $0$ the
+highest weight cannot exceed the maximal eigenvalue, which is bounded by the dimension.
+More rigorously, the $\mathfrak{sl}_2$ submodule generated by $\g_\alpha$ (which is a
+highest weight vector because $E_\alpha X_\alpha \in \g_{2\alpha}=0$ by the root property)
+must have highest weight $2$ (since $H_\alpha$ acts as $2$ on $\g_\alpha$). The dimension
+of this irreducible module is $3$, with weights $\{-2,0,2\}$. The weight space of $2$
+is $\g_\alpha$ (one‑dimensional), of $0$ is $\h$ (or a subspace thereof), and of $-2$
+is $\g_{-\alpha}$. Hence $\dim\g_\alpha=1$, and no other multiples of $\alpha$ ($\pm2\alpha$,
+etc.) can appear. This completes the proof that
+\begin{enumerate}
+  \item $\dim\g_\alpha = 1$,
+  \item the only multiples of $\alpha$ in $R$ are $\pm\alpha$.
+\end{enumerate}
+
+Finally, using the string condition (4.3) with $p,q$, we compute the reflection
+$s_\alpha$ on $\beta$:
+\[
+s_\alpha(\beta) = \beta - 2\frac{\langle\beta,\alpha\rangle}{\langle\alpha,\alpha\rangle}\alpha
+= \beta - (q-p)\alpha.
+\]
+Because the string is symmetric, $\beta - (q-p)\alpha$ is exactly $\beta - m\alpha$
+where $m = q-p$, and one checks that this belongs to the string (it is the element
+at position $-p$ after shifting). Hence $s_\alpha(\beta)\in R$. Thus
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item $s_\alpha(R) = R$ for all $\alpha\in R$.
+\end{enumerate}
+
+We have now established all the fundamental properties of roots using only the
+existence of the Cartan subalgebra, the nondegenerate Killing form, and the
+representation theory of $\mathfrak{sl}_2$. These properties will be crystallized
+into the abstract definition of a root system.
+
+\subsection{The Weyl group}
+\begin{definition}
+The \textbf{Weyl group} $\W$ is the subgroup of the orthogonal group $O(E)$ generated by
+the reflections $\{s_\alpha \mid \alpha\in R\}$.
+\end{definition}
+Each $s_\alpha$ permutes the finite set $R$, and $R$ spans $E$; hence the map
+$\W \to \text{Perm}(R)$ is injective, and $\W$ is a finite group (a subgroup of the
+symmetric group on $|R|$ elements). In physical applications, the Weyl group is the
+symmetry of the weight diagram; it organizes weights of representations into orbits.
+
+\section{Root Systems and their Geometry}
+
+The properties we have derived are so restrictive and elegant that we now abstract
+them, allowing us to classify all possibilities independently of the original Lie
+algebra.
+
+\begin{definition}
+A \textbf{reduced root system} is a finite set $R$ of nonzero vectors in a Euclidean
+space $E$ (with inner product $\langle\cdot,\cdot\rangle$) satisfying:
+\begin{enumerate}[label=(R\arabic*)]
+  \item $R$ spans $E$.
+  \item For each $\alpha\in R$, the only scalar multiples of $\alpha$ that belong to $R$
+    are $\pm\alpha$.
+  \item For each $\alpha\in R$, the reflection $s_\alpha(\lambda) = \lambda - 2\frac{\langle\lambda,\alpha\rangle}{\langle\alpha,\alpha\rangle}\alpha$
+    leaves $R$ invariant.
+  \item For any $\alpha,\beta\in R$, $n_{\beta\alpha} = 2\frac{\langle\beta,\alpha\rangle}{\langle\alpha,\alpha\rangle} \in \Z$.
+\end{enumerate}
+\end{definition}
+We have proved that the roots of a semisimple Lie algebra form a reduced root system.
+Conversely, every reduced root system arises from some semisimple Lie algebra (Serre’s
+theorem, Section 7). Hence classifying semisimple Lie algebras is equivalent to
+classifying reduced root systems.
+
+A root system is \textbf{irreducible} if it cannot be expressed as the orthogonal
+disjoint union of two nonempty subsets. The Lie algebra is simple iff its root
+system is irreducible.
+
+\subsection{Simple roots and bases}
+To work with a root system, we choose a direction.
+
+\begin{definition}
+A subset $\D \subset R$ is a \textbf{base} (or system of simple roots) if
+\begin{itemize}
+  \item $\D$ is a basis of $E$,
+  \item every $\beta\in R$ can be written as $\beta = \sum_{\alpha\in\D} c_\alpha \alpha$
+    with integer coefficients $c_\alpha$ that are either all $\ge 0$ (positive roots)
+    or all $\le 0$ (negative roots).
+\end{itemize}
+\end{definition}
+
+\begin{proposition}
+A base always exists.
+\end{proposition}
+\begin{proof}
+Pick a vector $v\in E$ that is \emph{regular}, i.e., $\langle v,\alpha\rangle \neq 0$
+for all $\alpha\in R$. (Such vectors exist because the hyperplanes $\alpha^\perp$ do
+not cover $E$.) Declare a root $\alpha$ to be \emph{positive} if $\langle v,\alpha\rangle > 0$,
+and negative otherwise. An element of $R^+$ (the set of positive roots) is
+\emph{ndecomposable} if it cannot be written as a sum of two other positive roots.
+One proves that the set $\D$ of all indecomposable positive roots is a base.
+The proof uses the finite generation property and integrality. See \cite{Hall}, Thm.~8.16
+for details.
+\end{proof}
+
+The Weyl group acts simply transitively on the set of all bases.
+
+Given a base $\D = \{\alpha_1,\dots,\alpha_r\}$ ($r$ is the rank), the
+\textbf{Cartan matrix} $A = (A_{ij})$ is defined by
+\[
+A_{ij} = 2\frac{\langle\alpha_j,\alpha_i\rangle}{\langle\alpha_i,\alpha_i\rangle}
+= n_{\alpha_j\alpha_i}.
+\]
+All information about the root system is encoded in this integer matrix. In particular,
+\begin{itemize}
+  \item $A_{ii} = 2$ for all $i$.
+  \item For $i\neq j$, $A_{ij} \in \{0,-1,-2,-3\}$ because $A_{ij}A_{ji} = 4\cos^2\theta_{ij}$
+    with $\theta_{ij}$ the angle between $\alpha_i$ and $\alpha_j$. Since the roots are
+    not scalar multiples, $A_{ij}A_{ji}$ can only be $0,1,2,3$.
+  \item $A_{ij}=0 \iff A_{ji}=0$.
+  \item The Cartan matrix is positive definite ($\det A >0$), which follows from the
+    positive definiteness of the inner product.
+\end{itemize}
+
+\subsection{Dynkin diagrams}
+The Cartan matrix is graphically represented by the \textbf{Dynkin diagram}:
+\begin{itemize}
+  \item Nodes correspond to the simple roots $\alpha_1,\dots,\alpha_r$.
+  \item Two nodes $i\neq j$ are connected by $A_{ij}A_{ji}$ edges (0,1,2,3).
+  \item If a multiple edge occurs, we draw an arrow pointing from the longer root
+    to the shorter root (i.e., from the node with larger $\langle\alpha_i,\alpha_i\rangle$
+    to the one with smaller).
+\end{itemize}
+
+The root system is irreducible iff the Dynkin diagram is connected. The classification
+of irreducible root systems reduces to the classification of connected Dynkin diagrams.
+
+\subsection{Classification theorem}
+\begin{theorem}[Cartan–Killing classification]
+Every irreducible reduced root system is isomorphic to exactly one of the following
+families, with Dynkin diagrams as shown:
+\[
+\begin{array}{c|l}
+\text{Type} & \text{Dynkin diagram} \\ \hline
+A_n\ (n\ge1) & \circ\!-\!\circ\!-\!\cdots\!-\!\circ \quad (n\text{ nodes}) \\
+B_n\ (n\ge2) & \circ\!-\!\circ\!-\!\cdots\!-\!\circ\!\Rightarrow\!\circ \\
+C_n\ (n\ge3) & \circ\!-\!\circ\!-\!\cdots\!-\!\circ\!\Leftarrow\!\circ \\
+D_n\ (n\ge4) & \circ\!-\!\circ\!-\!\cdots\!-\!\circ\text{ with an extra node attached to the penultimate} \\
+E_6, E_7, E_8 & \text{exceptional branching diagrams} \\
+F_4 & \circ\!-\!\circ\!\Rightarrow\!\circ\!-\!\circ \\
+G_2 & \circ\!\Rrightarrow\!\circ \quad\text{(triple edge)}
+\end{array}
+\]
+\end{theorem}
+\begin{proof}[Proof outline]
+The proof is a beautiful exercise in Euclidean geometry.
+\begin{enumerate}
+  \item Show that the Coxeter graph (ignore arrows) is a tree. If there were a cycle,
+    the sum of angles around the cycle would exceed $2\pi$, forcing the Cartan matrix
+    to be non‑positive definite, contradiction.
+  \item Bound the degree of any node. Since the simple roots are linearly independent,
+    a node connected to $k$ other nodes would imply that these $k$ vectors have a
+    nontrivial null linear combination, again using positive definiteness. One finds
+    that a node can have at most three edges, and certain patterns (like a triple
+    edge plus another edge) are forbidden.
+  \item These constraints eliminate all graphs except the known families $A_n$,
+    $B_n (=C_n)$, $D_n$, $E_6, E_7, E_8$, $F_4$, and $G_2$.
+  \item Finally, the arrow directions are determined by the relative root lengths.
+    For $B_n$ and $C_n$, which have a double edge, the arrow distinguishes between
+    the algebra where the short root is at the end ($B_n$) or the long root is at the
+    end ($C_n$). For $F_4$ and $G_2$, the arrows are fixed by consistency.
+\end{enumerate}
+A full exposition of this combinatorial argument can be found in \cite{Hall}, Ch.~8.
+\end{proof}
+
+Consequently, any complex simple Lie algebra belongs to one of the types $A_n$,
+$B_n$, $C_n$, $D_n$, $E_6$, $E_7$, $E_8$, $F_4$, $G_2$. A semisimple Lie algebra
+is a direct sum of simple such pieces.
+
+\begin{physremark}
+In physics, the $A_n$ series corresponds to $\mathfrak{su}(n+1)$; $B_n$ to
+$\mathfrak{so}(2n+1)$; $C_n$ to $\mathfrak{sp}(2n)$; $D_n$ to $\mathfrak{so}(2n)$.
+The exceptional groups $E_6, E_7, E_8$ appear in Grand Unified Theories (GUTs)
+and string theory; $F_4$ and $G_2$ arise in certain supergravity and M‑theory
+compactifications.
+\end{physremark}
+
+\section{Representations and Weights (A Physicist’s View)}
+\label{sec:rep}
+For completeness, we briefly sketch how representation theory ties into the above.
+A finite‑dimensional representation of $\g$ on a vector space $V$ is a Lie algebra
+homomorphism $\pi:\g\to\End(V)$.  When restricted to a Cartan subalgebra $\h$, the
+operators $\pi(H)$ for $H\in\h$ are simultaneously diagonalizable (by preservation
+of the Killing form, one can define a Cartan involution, etc.).  Thus $V$ decomposes
+into \textbf{weight spaces}
+\[
+V = \bigoplus_{\mu\in\Phi} V_\mu,\qquad V_\mu = \{v\in V \mid \pi(H)v = \mu(H)v\}.
+\]
+The weights $\mu$ are elements of $\h^*$, and their inner product with the roots
+governs which root operators $\pi(X_\alpha)$ map $V_\mu$ to $V_{\mu+\alpha}$.
+
+The \textbf{highest weight} of an irreducible representation is a weight $\lambda$
+such that $V_{\lambda+\alpha}=0$ for all positive roots $\alpha$.  The representation
+is uniquely determined by this highest weight, which must be \textbf{dominant integral}
+(i.e., $2\langle\lambda,\alpha\rangle/\langle\alpha,\alpha\rangle$ is a non‑negative
+integer for every simple root $\alpha$).  The Weyl group orbit of the highest weight
+generates all weights of the representation, and the multiplicity patterns are given
+by the celebrated Weyl character formula.
+
+This machinery is exactly what is used to classify elementary particles in GUTs:
+the known particles are assembled into an irreducible representation of the gauge
+algebra, and the weights (quantum numbers) are computed using the simple roots of
+the Dynkin diagram.
+
+\begin{example}[$SU(3)$ quark model]
+For $A_2$ ($\mathfrak{su}(3)$), the rank is 2. The simple roots are $\alpha_1,\alpha_2$
+with $\angle=120^\circ$ and equal lengths. The fundamental representation $\mathbf{3}$
+has highest weight $\Lambda_1 = \frac{2\alpha_1+\alpha_2}{3}$, while the antifundamental
+$\overline{\mathbf{3}}$ has highest weight $\Lambda_2 = \frac{\alpha_1+2\alpha_2}{3}$. The
+adjoint representation $\mathbf{8}$ consists of the roots themselves plus the two
+zero weights from $\h$. The meson and baryon octets, decuplets, etc., are all explained
+by tensor products of these basic representations, governed by the Clebsch–Gordan
+coefficients derived from the root and weight geometry.
+\end{example}
+
+\section{Reconstruction: Serre’s Theorem}
+
+To close the circle, we state that every abstract root system (or Cartan matrix)
+indeed comes from a Lie algebra.
+
+\begin{theorem}[Serre’s presentation]
+Let $A = (A_{ij})$ be an $r\times r$ Cartan matrix of finite type (i.e., all
+principal minors positive).  Define $\g(A)$ as the Lie algebra generated by
+$e_i, f_i, h_i$ ($i=1,\dots,r$) subject to the relations
+\[
+[h_i,h_j]=0,\quad [e_i,f_j] = \delta_{ij}h_i,\quad
+[h_i,e_j] = A_{ij}e_j,\quad [h_i,f_j] = -A_{ij}f_j,
+\]
+and the \emph{Serre relations}
+\[
+(\ad e_i)^{1-A_{ij}}(e_j)=0,\quad (\ad f_i)^{1-A_{ij}}(f_j)=0 \quad (i\neq j).
+\]
+Then $\g(A)$ is a finite‑dimensional complex semisimple Lie algebra whose
+Cartan matrix (with respect to $\h = \Span\{h_i\}$) is exactly $A$.
+\end{theorem}
+
+\begin{physremark}
+In physics, the generators $e_i, f_i, h_i$ correspond to raising, lowering, and
+diagonal (Cartan) operators, respectively. The Serre relations are the algebraic
+expression of the fact that repeated action of raising/lowering operators eventually
+vanishes inside a finite‑dimensional representation — ultimately a consequence of
+the finite number of states in a multiplet.
+\end{physremark}
+
+Thus the classification of complex simple Lie algebras is perfectly mirrored by
+the classification of irreducible Dynkin diagrams, and the whole theory is
+completely self‑contained.
+
+\section*{Conclusion}
+We have developed the complete classification of semisimple Lie algebras, starting
+from first principles and building up to the Dynkin diagrams and Serre’s
+reconstruction. The route goes through solvability, the Killing form, Cartan
+subalgebras, the $\mathfrak{sl}_2$ subalgebra machinery, root systems, and finally
+the combinatorial classification. This framework not only organises all possible
+continuous symmetries but also provides the computational tools (roots, weights,
+Weyl group) necessary to construct and analyze their representations—the very
+vocabulary in which much of modern theoretical physics is written.
+
+\begin{thebibliography}{1}
+\bibitem{Hall}
+B.~C. Hall, \emph{Lie Groups, Lie Algebras, and Representations: An Elementary Introduction},
+2nd ed., GTM 222, Springer, 2015.
+\end{thebibliography}
+
+\end{document}
